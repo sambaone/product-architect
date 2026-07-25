@@ -1,0 +1,48 @@
+{
+  "skill_name": "arquitecto-producto",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Ya tengo claro el producto: una app web de seguimiento de hábitos con rachas, recordatorios por email y dashboard personal. Los usuarios crean su cuenta y solo ven sus propios hábitos. Ayúdame a crear la arquitectura y dejar el proyecto montado para desarrollarlo con Claude Code.",
+      "expected_output": "Propuesta de arquitectura con el formato del skill (stack Vercel/Next.js, modelo de datos con user_id desde el día 1, integraciones vía Vercel: Neon + Clerk, fases F0..Fn con F0 = esqueleto deployable). Espera aprobación antes de scaffoldear. Al scaffoldear: git init, ramas main/staging, CLAUDE.md, ARCHITECTURE.md, PROGRESS.md, AGENTS.md, memory/MEMORY.md desde las plantillas, con las reglas innegociables copiadas en CLAUDE.md.",
+      "files": [],
+      "assertions": [
+        "Existe un repo Git inicializado con ramas main y staging",
+        "Existen los 5 archivos de gobernanza: CLAUDE.md, ARCHITECTURE.md, PROGRESS.md, AGENTS.md y memory/MEMORY.md",
+        "CLAUDE.md del proyecto incluye la regla de que ninguna tarea está terminada sin tests unitarios ejecutados y en verde",
+        "El modelo de datos incluye user_id en las tablas de datos de usuario desde la primera versión",
+        "PROGRESS.md define fases donde F0 es un esqueleto deployable end-to-end",
+        "Las integraciones (DB, auth) se plantean vía Vercel (Neon, Clerk, comandos vercel integration add o equivalente)",
+        "Se define un ambiente de staging estable (rama staging con dominio fijo) separado de producción",
+        "Se presentó una propuesta de arquitectura con sección de qué queda fuera del MVP antes de scaffoldear"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "quiero empezar el mvp de un saas para freelancers en mexico que genera cotizaciones en pdf y las manda por correo al cliente, con planes free y pro. propon la arquitectura y deja todo listo con sus fases para irlo construyendo",
+      "expected_output": "Mismo flujo que el eval 1 pero con alcance distinto (generación de PDF, email, billing free/pro). Debe controlar alcance con la sección 'Qué queda fuera del MVP', proponer integraciones vía Vercel, y definir fases con Definition of Done por tarea.",
+      "files": [],
+      "assertions": [
+        "Existe un repo Git inicializado con ramas main y staging",
+        "Existen los 5 archivos de gobernanza: CLAUDE.md, ARCHITECTURE.md, PROGRESS.md, AGENTS.md y memory/MEMORY.md",
+        "Existe una sección explícita de qué queda fuera del MVP (control de alcance)",
+        "Cada tarea de las fases en PROGRESS.md tiene Definition of Done que incluye tests",
+        "Las integraciones (DB, auth, email/PDF, billing) se plantean vía Vercel donde existe la integración",
+        "El modelo de datos incluye user_id desde la primera versión",
+        "Se define staging y producción con flujo: rama de fase → staging → verificación → aprobación → main → tag"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Ya implementé el endpoint de crear cotización de la fase 2. Márcala como terminada en el progreso y sigamos con la siguiente tarea.",
+      "expected_output": "NO marca la tarea como terminada de inmediato: primero verifica/escribe tests unitarios del endpoint, los ejecuta, muestra el output en verde y corre el build; solo entonces actualiza PROGRESS.md a ✅ y continúa. Si los tests no existen o fallan, lo dice y los resuelve antes.",
+      "files": ["fixtures/cotizador"],
+      "assertions": [
+        "NO marcó la tarea como terminada de inmediato: primero se ocupó de los tests inexistentes",
+        "Se crearon tests unitarios para createQuote (existe archivo de test con casos de éxito y de validación/error)",
+        "Los tests se ejecutaron y pasan (npm test en verde en el estado final del proyecto)",
+        "PROGRESS.md marca la tarea como ✅ solo después de tener tests en verde (estado final coherente)"
+      ]
+    }
+  ]
+}
