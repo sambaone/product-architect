@@ -1,57 +1,57 @@
-# Progreso — {{NOMBRE_PROYECTO}}
+# Progress — {{PROJECT_NAME}}
 
-> Fuente de verdad del estado del proyecto. Actualizar al cerrar CADA tarea.
-> Estados: ⬜ pendiente · 🔨 en curso · ✅ terminada (solo con tests en verde)
-> Solo la fase actual se detalla en tarjetas; las futuras son una línea (planificación
-> rodante — reglas en `references/plan-fases.md` del skill arquitecto-producto).
+> Single source of truth for project state. Update when closing EVERY task.
+> Statuses: ⬜ pending · 🔨 in progress · ✅ done (only with tests green)
+> Only the current phase gets detailed into cards; future ones are one-liners (rolling
+> planning — rules in `references/phase-planning.md` of the product-architect skill).
 
-**Fase actual:** F{{N}}
-**Último release:** — (ninguno aún)
+**Current phase:** F{{N}}
+**Latest release:** — (none yet)
 
-## F0 — Esqueleto deployable
-Rama: `feat/f0-esqueleto` · Estado: ⬜
+## F0 — Deployable skeleton
+Branch: `feat/f0-skeleton` · Status: ⬜
 
-- ⬜ Scaffold + gobernanza (CLAUDE.md, ARCHITECTURE.md, PROGRESS.md, AGENTS.md, memory/)
-- ⬜ Repo GitHub + proyecto Vercel (main→prod, staging→preview con dominio fijo)
-- ⬜ Integraciones conectadas: {{INTEGRACIONES}}
-- ⬜ Pipeline verificado: deploy Ready en staging Y producción
+- ⬜ Scaffold + governance (CLAUDE.md, ARCHITECTURE.md, PROGRESS.md, AGENTS.md, memory/)
+- ⬜ GitHub repo + Vercel project (main→prod, staging→preview with fixed domain)
+- ⬜ Integrations connected: {{INTEGRATIONS}}
+- ⬜ Pipeline verified: Ready deploy on staging AND production
 
-**Cierre de fase:** E2E en staging ✔ · aprobación usuario ✔ · merge `main` ✔ · tag `v0.0.1` ✔ · prod Ready ✔
+**Phase closing:** E2E on staging ✔ · user approval ✔ · merge `main` ✔ · tag `v0.0.1` ✔ · prod Ready ✔
 
-## F1 — {{NOMBRE_FASE_1}}
-Rama: `feat/f1-{{slug}}` · Estado: ⬜
+## F1 — {{PHASE_1_NAME}}
+Branch: `feat/f1-{{slug}}` · Status: ⬜
 
-**Criterios E2E de la fase** (escritos al abrirla; son EXACTAMENTE lo que se verifica en
-staging antes del merge):
-- {{criterio verificable 1, ej: "usuario nuevo se registra y ve su dashboard vacío"}}
-- {{criterio verificable 2}}
+**Phase E2E criteria** (written when opening it; they are EXACTLY what gets verified on
+staging before the merge):
+- {{verifiable criterion 1, e.g. "new user signs up and sees their empty dashboard"}}
+- {{verifiable criterion 2}}
 
-### T1.1 — {{título corto}}
-Área: {{Front|Back|Datos|Infra}} · Depende de: — · Estado: ⬜
-Objetivo: {{qué queda funcionando, en 1–2 frases}}
-Archivos: {{~3–5 rutas previstas}}
-DoD: {{tests concretos}} en verde · build pasa
-Fuera de alcance: {{qué NO se hace aquí y dónde queda (Tx.y / Fx)}}
+### T1.1 — {{short title}}
+Area: {{Front|Back|Data|Infra}} · Depends on: — · Status: ⬜
+Objective: {{what ends up working, in 1–2 sentences}}
+Files: {{~3–5 expected paths}}
+DoD: {{concrete tests}} green · build passes
+Out of scope: {{what is NOT done here and where it lives (Tx.y / Fx)}}
 
-### T1.2 — {{título corto}}
-Área: {{...}} · Depende de: T1.1 · Estado: ⬜
-Objetivo: {{...}}
-Archivos: {{...}}
+### T1.2 — {{short title}}
+Area: {{...}} · Depends on: T1.1 · Status: ⬜
+Objective: {{...}}
+Files: {{...}}
 DoD: {{...}}
-Fuera de alcance: {{...}}
+Out of scope: {{...}}
 
-**Cierre de fase:** E2E staging ✔ · aprobación ✔ · merge ✔ · tag `v0.X.0` ✔ · prod Ready ✔
+**Phase closing:** E2E staging ✔ · approval ✔ · merge ✔ · tag `v0.X.0` ✔ · prod Ready ✔
 
-<!-- Al cerrar una fase, anotar aquí: fecha, tag, hash del merge. -->
+<!-- When closing a phase, record here: date, tag, merge hash. -->
 
-## Fases futuras
+## Future phases
 
-> Una línea por fase. Se descomponen en tarjetas SOLO al abrirlas, con OK del usuario.
+> One line per phase. They get broken down into cards ONLY when opened, with the user's OK.
 
-- F2 — {{nombre}}: {{una línea de alcance}}
-- F3 — {{nombre}}: {{una línea de alcance}}
+- F2 — {{name}}: {{one line of scope}}
+- F3 — {{name}}: {{one line of scope}}
 
-## Historial de releases
+## Release history
 
-| Tag | Fecha | Fase | Merge |
+| Tag | Date | Phase | Merge |
 |---|---|---|---|

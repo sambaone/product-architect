@@ -1,25 +1,25 @@
-# Agentes — {{NOMBRE_PROYECTO}}
+# Agents — {{PROJECT_NAME}}
 
-> Cómo repartir el trabajo entre agentes/sesiones de Claude Code sin que se pisen.
-> La estructura del proyecto (ver `ARCHITECTURE.md`) está pensada para que estas áreas
-> sean independientes.
+> How to split the work across Claude Code agents/sessions without them stepping on each
+> other. The project structure (see `ARCHITECTURE.md`) is designed so these areas are
+> independent.
 
-## Áreas de trabajo
+## Work areas
 
-| Área | Alcance (carpetas) | Notas |
+| Area | Scope (folders) | Notes |
 |---|---|---|
-| Front | `app/`, `components/` | UI, páginas, estados de carga/error |
-| Back | `app/api/`, `lib/server/` | Endpoints, lógica de negocio, authz |
-| Datos | `lib/db/`, migraciones | Esquema, queries scopeadas por `user_id` |
-| Infra | Vercel, integraciones, envs | Solo vía Vercel CLI/MCP |
+| Front | `app/`, `components/` | UI, pages, loading/error states |
+| Back | `app/api/`, `lib/server/` | Endpoints, business logic, authz |
+| Data | `lib/db/`, migrations | Schema, queries scoped by `user_id` |
+| Infra | Vercel, integrations, envs | Only via Vercel CLI/MCP |
 
-## Reglas para todo agente
+## Rules for every agent
 
-1. Lee `CLAUDE.md`, `PROGRESS.md` y `memory/MEMORY.md` antes de tocar código.
-2. Trabaja SOLO en tu área y en la rama de fase asignada (`feat/fN-...`). Toma únicamente
-   tarjetas de `PROGRESS.md` cuya `Área:` sea la tuya y cuyas dependencias (`Depende de:`)
-   estén en ✅. Si necesitas tocar otra área, decláralo antes.
-3. Aplica el Definition of Done de `CLAUDE.md` — nada de marcar tareas sin tests en verde.
-4. Si descubres un gotcha o tomas una decisión de diseño, anótala en `memory/MEMORY.md`.
-5. Si algo del plan no funciona, NO improvises un rediseño: repórtalo para regresar y
-   ajustar `ARCHITECTURE.md` / `PROGRESS.md` primero.
+1. Read `CLAUDE.md`, `PROGRESS.md` and `memory/MEMORY.md` before touching code.
+2. Work ONLY in your area and on the assigned phase branch (`feat/fN-...`). Take only
+   cards from `PROGRESS.md` whose `Area:` is yours and whose dependencies (`Depends on:`)
+   are at ✅. If you need to touch another area, declare it first.
+3. Apply the Definition of Done from `CLAUDE.md` — no marking tasks without tests green.
+4. If you discover a gotcha or make a design decision, record it in `memory/MEMORY.md`.
+5. If something in the plan doesn't work, do NOT improvise a redesign: report it so we can
+   go back and adjust `ARCHITECTURE.md` / `PROGRESS.md` first.

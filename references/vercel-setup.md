@@ -1,68 +1,66 @@
-# Setup de Vercel: entornos, integraciones y gotchas
+# Vercel setup: environments, integrations and gotchas
 
-Leer al ejecutar el Paso 3 del skill (GitHub + Vercel + integraciones).
+Read when executing Step 3 of the skill (GitHub + Vercel + integrations).
 
-## Proyecto nuevo
+## New project
 
-Cada producto = proyecto nuevo en Vercel (nunca reutilizar uno existente).
+Every product = a new Vercel project (never reuse an existing one).
 
 ```bash
-vercel link          # crear/vincular el proyecto (o usar el MCP de Vercel)
+vercel link          # create/link the project (or use the Vercel MCP)
 ```
 
-Si el MCP de Vercel está disponible en la sesión, preferirlo para crear el proyecto,
-consultar deployments y leer logs — automatiza sin salir de Claude Code.
+If the Vercel MCP is available in the session, prefer it to create the project, check
+deployments and read logs — it automates without leaving Claude Code.
 
-## Entornos: producción y staging
+## Environments: production and staging
 
-Vercel trae Production (rama `main`) y Preview (todas las demás). Para tener un staging
-estable:
+Vercel ships with Production (branch `main`) and Preview (all other branches). To get a
+stable staging:
 
-1. Crear la rama `staging` y pushearla.
-2. Asignarle un dominio fijo al deployment de esa rama:
+1. Create the `staging` branch and push it.
+2. Assign a fixed domain to that branch's deployment:
    ```bash
-   vercel domains add staging-<proyecto>.vercel.app   # o vía dashboard: Settings → Domains → asignar a rama staging
+   vercel domains add staging-<project>.vercel.app   # or via dashboard: Settings → Domains → assign to the staging branch
    ```
-   Así las pruebas E2E de cada fase tienen URL estable, no una URL de preview distinta
-   por commit.
-3. Variables de entorno: revisar qué valores difieren entre Production y Preview
-   (ej. claves de test de Clerk en Preview, live en Production). `vercel env pull` para
-   sincronizar local.
+   This way each phase's E2E testing has a stable URL, not a different preview URL per
+   commit.
+3. Environment variables: review which values differ between Production and Preview
+   (e.g. Clerk test keys in Preview, live keys in Production). `vercel env pull` to sync
+   locally.
 
-Verificación del pipeline (antes de escribir features): un commit trivial a `staging`
-debe producir deploy Ready en la URL de staging; el merge a `main` debe producir deploy
-Ready en producción. Confirmar ambos con `vercel ls` / MCP, no asumir.
+Pipeline verification (before writing features): a trivial commit to `staging` must produce
+a Ready deploy on the staging URL; the merge to `main` must produce a Ready deploy in
+production. Confirm both with `vercel ls` / MCP — don't assume.
 
-## Integraciones (siempre vía Vercel)
+## Integrations (always via Vercel)
 
-| Necesidad | Servicio | Comando |
+| Need | Service | Command |
 |---|---|---|
 | Postgres | Neon | `vercel integration add neon` |
 | Auth | Clerk | `vercel integration add clerk` |
 | Rate limit / Redis | Upstash | `vercel integration add upstash` |
-| Blob storage | Vercel Blob | nativo (`vercel blob`) |
+| Blob storage | Vercel Blob | native (`vercel blob`) |
 
-Después de cada integración: `vercel env pull .env.local` y verificar que la app arranca.
+After each integration: `vercel env pull .env.local` and verify the app boots.
 
-## Gotchas conocidos (aprendidos en proyectos reales)
+## Known gotchas (learned in real projects)
 
-- **`vercel integration add` sobrescribe `.env.local` en cada ejecución.** Respaldar
-  (`cp .env.local .env.local.bak`) antes de agregar una integración nueva y re-mergear
-  a mano las variables que no vengan de Vercel.
-- **Clerk + Next.js:** `createRouteMatcher` con patrones deprecados cambia entre
-  versiones — revisar la doc de la versión instalada, no la memoria. Si se usa proxy
-  (`proxy.ts`), configurarlo desde el inicio.
-- **Clerk en Preview/staging:** usar las claves de test (instancia de desarrollo) en
-  Preview y las live solo en Production, para poder probar cuentas sin ensuciar datos
-  reales.
-- **Rate limiting (Upstash):** las respuestas 429 devuelven body de texto plano — el
-  cliente debe manejar respuestas no-JSON. En general, definir `onError` en los handlers
-  para que los errores lleguen legibles al front.
-- **BD compartida entre staging y prod:** si el MVP arranca con una sola base de datos,
-  las pruebas E2E tocan datos reales. Confirmar SIEMPRE la identidad de la sesión antes
-  de operaciones destructivas, y considerar rama de BD separada para staging (Neon
-  branching) en cuanto haya usuarios reales.
-- **Multi-tenancy:** incluir `user_id` (del proveedor de auth) NOT NULL + índice en las
-  tablas desde la primera migración, con todas las queries scopeadas `fn(userId, …)` y
-  authz que devuelve 404 (no 403) para recursos ajenos. Agregarlo después es una
-  migración dolorosa.
+- **`vercel integration add` overwrites `.env.local` on every run.** Back it up
+  (`cp .env.local .env.local.bak`) before adding a new integration and hand-merge back the
+  variables that don't come from Vercel.
+- **Clerk + Next.js:** `createRouteMatcher` with deprecated patterns changes between
+  versions — check the docs of the installed version, not memory. If using a proxy
+  (`proxy.ts`), configure it from the start.
+- **Clerk in Preview/staging:** use the test keys (development instance) in Preview and
+  the live keys only in Production, so you can test accounts without polluting real data.
+- **Rate limiting (Upstash):** 429 responses return a plain-text body — the client must
+  handle non-JSON responses. In general, define `onError` in handlers so errors reach the
+  frontend in readable form.
+- **Database shared between staging and prod:** if the MVP starts with a single database,
+  E2E tests touch real data. ALWAYS confirm the session's identity before destructive
+  operations, and consider a separate DB branch for staging (Neon branching) as soon as
+  there are real users.
+- **Multi-tenancy:** include `user_id` (from the auth provider) NOT NULL + index on the
+  tables from the first migration, with all queries scoped `fn(userId, …)` and authz that
+  returns 404 (not 403) for foreign resources. Adding it later is a painful migration.

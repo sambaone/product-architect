@@ -1,46 +1,46 @@
-# Flujo de Git: ramas, commits, tags y releases
+# Git flow: branches, commits, tags and releases
 
-Leer si hay dudas durante el ciclo de fase.
+Read if in doubt during the phase cycle.
 
-## Ramas
+## Branches
 
 ```
-main      ← producción. Solo recibe merges desde staging, aprobados por el usuario.
-staging   ← integración. Recibe PRs de las ramas de fase. Deploya a la URL fija de staging.
-feat/fN-descripcion  ← trabajo diario. Una por fase (o por tarea grande dentro de la fase).
-fix/descripcion      ← hotfixes. Salen de main, se mergean a main Y a staging.
+main      ← production. Only receives merges from staging, approved by the user.
+staging   ← integration. Receives PRs from phase branches. Deploys to the fixed staging URL.
+feat/fN-description  ← daily work. One per phase (or per large task within the phase).
+fix/description      ← hotfixes. Branch off main, merge to main AND to staging.
 ```
 
-Nunca commitear directo en `main` ni `staging`.
+Never commit directly on `main` or `staging`.
 
 ## Commits
 
-Convención: `tipo(alcance opcional): descripción en minúsculas`
+Convention: `type(optional scope): lowercase description`
 
-- `feat:` funcionalidad nueva · `fix:` corrección · `test:` solo tests
-- `chore:` tooling/config · `docs:` documentación · `refactor:` sin cambio de comportamiento
+- `feat:` new functionality · `fix:` correction · `test:` tests only
+- `chore:` tooling/config · `docs:` documentation · `refactor:` no behavior change
 
-Un commit por unidad coherente de trabajo (idealmente por tarea con su DoD cumplido), no
-un mega-commit por fase. El mensaje dice QUÉ y, si no es obvio, POR QUÉ.
+One commit per coherent unit of work (ideally per task with its DoD met), not one
+mega-commit per phase. The message says WHAT and, if not obvious, WHY.
 
-## Cierre de fase (checklist completo)
+## Phase closing (full checklist)
 
-1. Todas las tareas de la fase en ✅ en `PROGRESS.md` (cada una pasó su DoD con tests).
-2. PR `feat/fN-...` → `staging`. Revisar el diff completo antes de mergear.
-3. Deploy de staging en Ready → verificación E2E en la URL fija de staging.
-4. **Pedir aprobación explícita al usuario** mostrando: qué se verificó, resultado, y qué
-   se va a mergear. No mergear a `main` sin su "sí".
+1. All tasks of the phase at ✅ in `PROGRESS.md` (each passed its DoD with tests).
+2. PR `feat/fN-...` → `staging`. Review the full diff before merging.
+3. Staging deploy Ready → E2E verification on the fixed staging URL.
+4. **Ask the user for explicit approval** showing: what was verified, the result, and what
+   is going to be merged. Do not merge to `main` without their "yes".
 5. PR `staging` → `main`, merge.
 6. Tag: `git tag vX.Y.Z && git push --tags`
-   - `v0.0.1` = F0 deployable · minor (`v0.X.0`) = fase completada · patch = hotfix
-   - `v1.0.0` = MVP completo en producción con usuarios reales.
-7. Verificar deploy de producción en Ready (no asumir: consultar Vercel).
-8. Actualizar `PROGRESS.md` (historial de releases: tag, fecha, hash) y `memory/MEMORY.md`.
+   - `v0.0.1` = deployable F0 · minor (`v0.X.0`) = phase completed · patch = hotfix
+   - `v1.0.0` = complete MVP in production with real users.
+7. Verify the production deploy is Ready (don't assume: check Vercel).
+8. Update `PROGRESS.md` (release history: tag, date, hash) and `memory/MEMORY.md`.
 
-## Hotfix en producción
+## Hotfix in production
 
-`fix/...` desde `main` → tests → merge a `main` → tag patch → verificar prod →
-mergear también a `staging` para que no diverjan.
+`fix/...` from `main` → tests → merge to `main` → patch tag → verify prod →
+also merge into `staging` so they don't diverge.
 
-El DoD de tarea aplica igual a los hotfixes: test que reproduce el bug (falla antes,
-pasa después) + suite en verde + build. Un hotfix sin test es deuda que vuelve.
+The task DoD applies equally to hotfixes: a test that reproduces the bug (fails before,
+passes after) + suite green + build. A hotfix without a test is debt that comes back.

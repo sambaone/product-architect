@@ -1,181 +1,180 @@
 ---
-name: arquitecto-producto
+name: product-architect
 description: >
-  Diseña la arquitectura de software y deja listo el andamiaje completo de un producto para
-  desarrollarlo con Claude Code sobre Vercel. Úsalo SIEMPRE que el usuario quiera "crear la
-  arquitectura", "iniciar un proyecto nuevo", "montar el proyecto", "empezar el MVP", "diseñar
-  el producto", "estructurar el desarrollo", o cuando ya exista contexto de qué hará un producto
-  y toque pasar a construirlo — aunque no pida explícitamente "arquitectura". Genera CLAUDE.md,
-  AGENTS.md, PROGRESS.md, ARCHITECTURE.md y memoria de proyecto; impone Git + GitHub con ramas
-  por fase, ambientes staging y producción en Vercel, integraciones vía Vercel (Neon, Clerk,
-  Upstash) y la regla de que ninguna tarea está terminada sin tests unitarios pasando. También
-  aplica DURANTE el desarrollo: cuando se termina una tarea o fase, este skill define cómo se
-  verifica, se mergea, se taggea y se deploya.
+  Designs the software architecture and scaffolds the complete foundation of a product to be
+  built with Claude Code on Vercel. Use it WHENEVER the user wants to "create the
+  architecture", "start a new project", "set up the project", "start the MVP", "design the
+  product", "structure the development", or when there is already context about what a product
+  will do and it's time to build it — even if they don't explicitly ask for "architecture".
+  Generates CLAUDE.md, AGENTS.md, PROGRESS.md, ARCHITECTURE.md and project memory; enforces
+  Git + GitHub with per-phase branches, staging and production environments on Vercel,
+  integrations via Vercel (Neon, Clerk, Upstash), and the rule that no task is done until its
+  unit tests pass. It also applies DURING development: when a task or phase is finished, this
+  skill defines how it gets verified, merged, tagged and deployed.
 ---
 
-# Arquitecto de Producto
+# Product Architect
 
-Convierte el contexto de un producto en un proyecto listo para desarrollarse con Claude Code:
-arquitectura propuesta, repo con Git, archivos de memoria/instrucciones, plan por fases, y
-pipeline staging → producción en Vercel. Después, gobierna la ejecución: cómo se cierra una
-tarea, cómo se cierra una fase, y cuándo algo llega a producción.
+Turns product context into a project ready to be developed with Claude Code: proposed
+architecture, Git repo, memory/instruction files, phased plan, and a staging → production
+pipeline on Vercel. Afterwards, it governs execution: how a task closes, how a phase closes,
+and when something reaches production.
 
-## Principios innegociables
+## Non-negotiable principles
 
-Estas reglas no se negocian ni se relajan aunque el usuario tenga prisa. El usuario deja que
-Claude proponga la arquitectura, pero estas reglas son suyas y son firmes:
+These rules are not negotiated or relaxed even if the user is in a hurry. The user lets
+Claude propose the architecture, but these rules are theirs and they are firm:
 
-1. **Git desde el minuto cero.** Todo proyecto es un repo Git con GitHub remoto. Nada de
-   carpetas sueltas sin control de cambios.
-2. **Una tarea NO está terminada hasta que sus tests unitarios corren y pasan.** Nunca digas
-   "listo" o marques una tarea como completa sin haber ejecutado los tests y mostrado el
-   resultado. Si no hay tests para esa tarea, escribirlos ES parte de la tarea.
-3. **Staging y producción siempre.** Todo lo que está en desarrollo (tareas de la fase actual)
-   se prueba en staging. A producción solo llega lo verificado.
-4. **No merge a `main` sin verificación E2E en staging + aprobación explícita del usuario.**
-   Verificar primero, preguntar después, mergear al final. (Ver [[no-merge-prod-sin-verificacion]]
-   en la memoria del usuario — es feedback directo de él.)
-5. **Vercel-first.** Proyecto nuevo en Vercel por cada producto. Base de datos, auth, cache,
-   etc. se conectan vía integraciones de Vercel (Neon, Clerk, Upstash…) y se gestionan con el
-   MCP de Vercel / CLI `vercel` para automatizar al máximo.
-6. **MVP simple pero escalable.** La arquitectura debe deployarse en Vercel rápidamente desde
-   la fase 0, pero con estructura de datos, front y back pensada para crecer sin reescribir.
+1. **Git from minute zero.** Every project is a Git repo with a GitHub remote. No loose
+   folders without version control.
+2. **A task is NOT done until its unit tests run and pass.** Never say "done" or mark a task
+   as complete without having executed the tests and shown the result. If the task has no
+   tests, writing them IS part of the task.
+3. **Staging and production, always.** Everything under development (tasks of the current
+   phase) is verified on staging. Only verified work reaches production.
+4. **No merge to `main` without E2E verification on staging + explicit user approval.**
+   Verify first, ask second, merge last. (Direct user feedback — firm.)
+5. **Vercel-first.** A new Vercel project for every product. Database, auth, cache, etc. are
+   connected via Vercel integrations (Neon, Clerk, Upstash…) and managed with the Vercel MCP
+   / `vercel` CLI to automate as much as possible.
+6. **Simple but scalable MVP.** The architecture must deploy to Vercel quickly from phase 0,
+   but with a data model, frontend and backend designed to grow without rewrites.
 
-## Flujo de trabajo
+## Workflow
 
-### Paso 0 — Confirmar el contexto
+### Step 0 — Confirm the context
 
-Antes de proponer nada, verifica que tienes: qué hace el producto, para quién es, y qué
-features componen el MVP. Si algo falta, haz una entrevista breve (máximo 4-5 preguntas
-concretas). No inventes alcance.
+Before proposing anything, verify you know: what the product does, who it's for, and which
+features make up the MVP. If something is missing, run a short interview (max 4–5 concrete
+questions). Do not invent scope.
 
-### Paso 1 — Proponer la arquitectura (y esperar el OK)
+### Step 1 — Propose the architecture (and wait for the OK)
 
-Presenta una propuesta con exactamente esta estructura y espera aprobación del usuario antes
-de crear archivos:
+Present a proposal with exactly this structure and wait for user approval before creating
+any files:
 
 ```
-## Propuesta de arquitectura: [nombre]
+## Architecture proposal: [name]
 ### Stack
-(por defecto: Next.js App Router + TypeScript, con UI en Tailwind CSS + shadcn/ui;
-justifica si propones otra cosa)
-### Modelo de datos inicial
-(tablas/entidades con campos clave; incluir user_id desde el día 1 si hay auth —
-multi-tenancy barato ahora, carísimo después)
-### Estructura del proyecto
-(carpetas front/back/lib/tests — pensada para que varios agentes trabajen en
-paralelo sin pisarse)
-### Integraciones (vía Vercel)
-(qué se conecta y con qué: DB → Neon, Auth → Clerk, Rate limit/cache → Upstash…)
-### Fases
-(F0..Fn, una línea por fase; F0 SIEMPRE = esqueleto deployable end-to-end)
-### Qué queda fuera del MVP
-(explícito, para controlar alcance)
+(default: Next.js App Router + TypeScript, with UI in Tailwind CSS + shadcn/ui;
+justify if you propose something else)
+### Initial data model
+(tables/entities with key fields; include user_id from day 1 if there is auth —
+multi-tenancy is cheap now, very expensive later)
+### Project structure
+(front/back/lib/tests folders — designed so multiple agents can work in
+parallel without stepping on each other)
+### Integrations (via Vercel)
+(what gets connected and with what: DB → Neon, Auth → Clerk, Rate limit/cache → Upstash…)
+### Phases
+(F0..Fn, one line per phase; F0 ALWAYS = deployable end-to-end skeleton)
+### Out of MVP scope
+(explicit, to control scope)
 ```
 
-Reglas de diseño: prefiere lo aburrido y probado; cada pieza debe poder escalar (Postgres
-serverless, auth gestionada, funciones serverless) sin migración dolorosa; evita
-microservicios, colas y abstracciones especulativas en un MVP.
+Design rules: prefer boring and proven; every piece must be able to scale (serverless
+Postgres, managed auth, serverless functions) without painful migration; avoid
+microservices, queues and speculative abstractions in an MVP.
 
-Front: los componentes de UI se construyen con **shadcn/ui** sobre Tailwind (instalados
-con `npx shadcn@latest add <componente>`, no copiados a mano ni reinventados). Esto da
-consistencia visual entre proyectos y componentes accesibles desde el día 1. Registrar
-en `ARCHITECTURE.md` el tema (colores/tipografía) elegido. Si la sesión tiene el skill
-`vercel:shadcn` disponible, úsalo al montar la UI.
+Frontend: UI components are built with **shadcn/ui** on Tailwind (installed with
+`npx shadcn@latest add <component>`, never hand-copied or reinvented). This gives visual
+consistency across projects and accessible components from day 1. Record the chosen theme
+(colors/typography) in `ARCHITECTURE.md`. If the session has the `vercel:shadcn` skill
+available, use it when building the UI.
 
-### Paso 2 — Scaffold del proyecto
+### Step 2 — Project scaffold
 
-Con la arquitectura aprobada:
+With the architecture approved:
 
-1. Crear el proyecto (`create-next-app` o equivalente) e **inmediatamente** `git init` si la
-   herramienta no lo hizo.
-2. Crear los archivos de gobernanza desde las plantillas en `assets/` (rellena los
-   placeholders `{{...}}` con los datos del proyecto):
-   - `CLAUDE.md` ← `assets/CLAUDE.template.md` — instrucciones del proyecto (incluye estas
-     reglas innegociables para que TODA sesión futura las herede)
-   - `ARCHITECTURE.md` — la propuesta aprobada del Paso 1, tal cual
-   - `PROGRESS.md` ← `assets/PROGRESS.template.md` — fases y tareas con estado
-   - `AGENTS.md` ← `assets/AGENTS.template.md` — qué agentes/roles trabajan qué áreas
-   - `memory/MEMORY.md` ← `assets/MEMORY.template.md` — decisiones y gotchas del proyecto
-3. Ramas: `main` (producción) y `staging` (integración). El trabajo diario va en ramas
-   `feat/fN-descripcion`.
-4. Primer commit en `main`: `chore: scaffold inicial + gobernanza del proyecto`.
+1. Create the project (`create-next-app` or equivalent) and **immediately** `git init` if
+   the tool didn't do it.
+2. Create the governance files from the templates in `assets/` (fill the `{{...}}`
+   placeholders with the project's data):
+   - `CLAUDE.md` ← `assets/CLAUDE.template.md` — project instructions (includes these
+     non-negotiable rules so EVERY future session inherits them)
+   - `ARCHITECTURE.md` — the approved proposal from Step 1, verbatim
+   - `PROGRESS.md` ← `assets/PROGRESS.template.md` — phases and tasks with status
+   - `AGENTS.md` ← `assets/AGENTS.template.md` — which agents/roles work which areas
+   - `memory/MEMORY.md` ← `assets/MEMORY.template.md` — project decisions and gotchas
+3. Branches: `main` (production) and `staging` (integration). Daily work happens on
+   `feat/fN-description` branches.
+4. First commit on `main`: `chore: initial scaffold + project governance`.
 
-### Paso 3 — GitHub + Vercel + integraciones
+### Step 3 — GitHub + Vercel + integrations
 
-1. `gh repo create <nombre> --private --source=. --push` (confirma el nombre con el usuario
-   si no es obvio).
-2. Proyecto **nuevo** en Vercel vinculado al repo (`vercel link` / MCP de Vercel).
+1. `gh repo create <name> --private --source=. --push` (confirm the name with the user if
+   it's not obvious).
+2. **New** Vercel project linked to the repo (`vercel link` / Vercel MCP).
    - `main` → Production.
-   - `staging` → Preview con dominio fijo (asignar dominio `staging-<proyecto>.vercel.app`
-     a la rama para que las pruebas de fase tengan URL estable).
-3. Conectar integraciones según la arquitectura (`vercel integration add neon`, Clerk,
-   Upstash…) y `vercel env pull`. **Gotcha conocido:** cada `integration add` puede
-   sobrescribir `.env.local` — respáldalo antes. Más detalle en `references/vercel-setup.md`.
-4. Verificar el pipeline completo ANTES de escribir features: push a `staging` → deploy
-   Preview Ready → merge a `main` → deploy Production Ready. Si el esqueleto no deploya,
-   nada más importa todavía.
+   - `staging` → Preview with a fixed domain (assign the domain
+     `staging-<project>.vercel.app` to the branch so phase testing has a stable URL).
+3. Connect integrations according to the architecture (`vercel integration add neon`,
+   Clerk, Upstash…) and `vercel env pull`. **Known gotcha:** every `integration add` may
+   overwrite `.env.local` — back it up first. More detail in `references/vercel-setup.md`.
+4. Verify the full pipeline BEFORE writing features: push to `staging` → Preview deploy
+   Ready → merge to `main` → Production deploy Ready. If the skeleton doesn't deploy,
+   nothing else matters yet.
 
-### Paso 4 — Plan por fases en PROGRESS.md (planificación rodante)
+### Step 4 — Phased plan in PROGRESS.md (rolling planning)
 
-Lee `references/plan-fases.md` ANTES de este paso — define la regla de tarea atómica,
-el formato de tarjeta y la planificación rodante. Resumen del contrato:
+Read `references/phase-planning.md` BEFORE this step — it defines the atomic task rule,
+the task-card format and rolling planning. Summary of the contract:
 
-1. Descompón el MVP en fases F0..Fn (F0 = esqueleto deployable, ya hecho en el Paso 3),
-   cada fase = un entregable verificable, **5–8 tareas máximo**.
-2. Solo la **fase actual** se detalla en tarjetas de tarea autocontenidas (átomo = una
-   sesión, un commit, una área, ~3–5 archivos, DoD con tests propios). Las fases futuras
-   quedan como una línea.
-3. Cada fase abre con sus **criterios E2E** escritos por adelantado — eso es lo que se
-   verificará en staging antes del merge.
-4. La descomposición de cada fase se presenta al usuario y se **espera su OK** antes de
-   empezar la primera tarea (mismo contrato que el Paso 1 con la arquitectura).
+1. Break the MVP into phases F0..Fn (F0 = deployable skeleton, already done in Step 3),
+   each phase = one verifiable deliverable, **5–8 tasks maximum**.
+2. Only the **current phase** gets detailed into self-contained task cards (atom = one
+   session, one commit, one area, ~3–5 files, DoD with its own tests). Future phases stay
+   as one-liners.
+3. Every phase opens with its **E2E criteria** written up front — that is exactly what will
+   be verified on staging before the merge.
+4. Each phase's breakdown is presented to the user and you **wait for their OK** before
+   starting the first task (same contract as Step 1 with the architecture).
 
-Escribe el plan en `PROGRESS.md` (formato de la plantilla) y haz commit.
+Write the plan in `PROGRESS.md` (template format) and commit.
 
-## Reglas de ejecución (vida del proyecto)
+## Execution rules (life of the project)
 
-Estas reglas aplican en TODAS las sesiones de desarrollo del proyecto (van copiadas en el
-CLAUDE.md del proyecto para que se hereden):
+These rules apply in ALL development sessions of the project (they are copied into the
+project's CLAUDE.md so they get inherited):
 
-**Definition of Done de una tarea:**
-- Código implementado + tests unitarios de esa tarea escritos.
-- Tests ejecutados en este momento (no "deberían pasar") y en verde — muestra el output.
-- Build local pasa (`npm run build` o equivalente).
-- `PROGRESS.md` actualizado. Solo entonces se puede decir "terminada".
+**Definition of Done for a task:**
+- Code implemented + unit tests for that task written.
+- Tests executed right now (not "they should pass") and green — show the output.
+- Local build passes (`npm run build` or equivalent).
+- `PROGRESS.md` updated. Only then can you say "done".
 
-**Ciclo de una fase:**
-0. Al abrir la fase: descomponerla en tarjetas de tarea atómicas + criterios E2E
-   (formato y reglas en `references/plan-fases.md`) y **esperar el OK del usuario**.
-1. Rama `feat/fN-descripcion` desde `staging`.
-2. Tareas una a una — idealmente **una tarjeta por sesión** —, cada una con su
-   Definition of Done y su commit (mensajes convencionales: `feat:`, `fix:`, `test:`,
-   `chore:`). Si una tarea crece a mitad: parar, partirla en `PROGRESS.md`, commitear
-   lo que ya cumple DoD, y seguir con la sub-tarea (división en caliente).
-3. Fase completa → PR a `staging` → verificar en la URL fija de staging **exactamente
-   los criterios E2E escritos al abrir la fase**.
-   En pruebas multi-usuario: confirmar la identidad de la sesión ANTES de cualquier
-   operación destructiva contra la base de datos.
-4. Verificado en staging → **pedir aprobación explícita al usuario** para mergear a `main`.
-5. Aprobado → merge a `main` → tag `vX.Y.Z` → verificar el deploy de producción en Ready →
-   actualizar `PROGRESS.md` y `memory/MEMORY.md` (decisiones, gotchas descubiertos).
+**Phase cycle:**
+0. When opening the phase: break it down into atomic task cards + E2E criteria (format and
+   rules in `references/phase-planning.md`) and **wait for the user's OK**.
+1. Branch `feat/fN-description` from `staging`.
+2. Tasks one by one — ideally **one card per session** —, each with its Definition of Done
+   and its commit (conventional messages: `feat:`, `fix:`, `test:`, `chore:`). If a task
+   grows mid-flight: stop, split it in `PROGRESS.md`, commit what already meets DoD, and
+   continue with the sub-task (hot split).
+3. Phase complete → PR to `staging` → verify on the fixed staging URL **exactly the E2E
+   criteria written when the phase was opened**.
+   In multi-user testing: confirm the session's identity BEFORE any destructive operation
+   against the database.
+4. Verified on staging → **ask the user for explicit approval** to merge to `main`.
+5. Approved → merge to `main` → tag `vX.Y.Z` → verify the production deploy is Ready →
+   update `PROGRESS.md` and `memory/MEMORY.md` (decisions, discovered gotchas).
 
-**Nunca:**
-- Marcar tareas como terminadas sin correr tests.
-- Empezar una tarea que no cumpla la regla de tarea atómica — partirla primero
-  (`references/plan-fases.md`).
-- Mergear a `main` sin pasar por staging.
-- Trabajar directo sobre `main` o `staging` (siempre ramas de fase).
-- Conectar servicios por fuera de Vercel si existe la integración en su Marketplace.
+**Never:**
+- Mark tasks as done without running tests.
+- Start a task that doesn't meet the atomic task rule — split it first
+  (`references/phase-planning.md`).
+- Merge to `main` without going through staging.
+- Work directly on `main` or `staging` (always phase branches).
+- Connect services outside Vercel if the integration exists in its Marketplace.
 
-## Referencias
+## References
 
-- `references/plan-fases.md` — regla de tarea atómica, formato de tarjeta, criterios E2E
-  por fase, planificación rodante, división en caliente e higiene de contexto. Léelo al
-  ejecutar el Paso 4 y al abrir cada fase.
-- `references/vercel-setup.md` — detalle de entornos, dominio fijo de staging, integraciones
-  (Neon/Clerk/Upstash) y gotchas conocidos. Léelo al ejecutar el Paso 3.
-- `references/git-flow.md` — flujo de ramas, convención de commits, tags y releases. Léelo
-  si hay dudas durante el ciclo de fase.
-- `assets/*.template.md` — plantillas de los archivos de gobernanza. Úsalas siempre en el
-  Paso 2 en lugar de inventar el formato.
+- `references/phase-planning.md` — atomic task rule, card format, per-phase E2E criteria,
+  rolling planning, hot split and context hygiene. Read it when executing Step 4 and when
+  opening every phase.
+- `references/vercel-setup.md` — detail on environments, fixed staging domain, integrations
+  (Neon/Clerk/Upstash) and known gotchas. Read it when executing Step 3.
+- `references/git-flow.md` — branch flow, commit convention, tags and releases. Read it
+  if in doubt during the phase cycle.
+- `assets/*.template.md` — templates for the governance files. Always use them in Step 2
+  instead of inventing the format.

@@ -1,8 +1,6 @@
-# arquitecto-producto
+# product-architect
 
 > A [Claude Code](https://claude.com/claude-code) skill that turns a product idea into a fully scaffolded, governed project on Vercel — and then enforces engineering discipline for the entire life of the build: atomic tasks, tests before "done", staging before production, and explicit user approval before anything ships.
-
-The skill content is written in **Spanish**, but Claude follows it regardless of the language you chat in. Feel free to fork and translate.
 
 ## The problem it solves
 
@@ -36,7 +34,7 @@ Then, **during development**, it governs execution: how a task closes, how a pha
 
 ## Atoms → molecules: how it keeps agents from breaking
 
-The part that makes this skill different is `references/plan-fases.md`:
+The part that makes this skill different is `references/phase-planning.md`:
 
 | Unit | What it is | Closes with |
 |---|---|---|
@@ -60,7 +58,7 @@ assets/
   AGENTS.template.md          # work areas for parallel agents
   MEMORY.template.md          # project memory (decisions, gotchas)
 references/
-  plan-fases.md               # atomic tasks, task cards, rolling planning
+  phase-planning.md           # atomic tasks, task cards, rolling planning
   vercel-setup.md             # environments, fixed staging domain, integration gotchas
   git-flow.md                 # branches, conventional commits, tags, releases, hotfixes
 evals/
@@ -70,10 +68,10 @@ evals/
 ## Installation
 
 ```bash
-git clone https://github.com/sambaone/arquitecto-producto.git ~/.claude/skills/arquitecto-producto
+git clone https://github.com/sambaone/product-architect.git ~/.claude/skills/product-architect
 ```
 
-Claude Code picks it up automatically. Trigger it by asking things like *"let's start a new project"*, *"design the architecture for…"*, or *"set up the MVP"* — or invoke it directly with `/arquitecto-producto`.
+Claude Code picks it up automatically. Trigger it by asking things like *"let's start a new project"*, *"design the architecture for…"*, or *"set up the MVP"* — or invoke it directly with `/product-architect`.
 
 ## Requirements & assumptions
 

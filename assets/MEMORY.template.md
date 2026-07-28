@@ -1,22 +1,22 @@
-# Memoria — {{NOMBRE_PROYECTO}}
+# Memory — {{PROJECT_NAME}}
 
-> Decisiones, gotchas y contexto que NO se deduce del código. Leer al iniciar sesión;
-> escribir al cerrar tareas/fases. Fechas siempre absolutas (YYYY-MM-DD).
+> Decisions, gotchas and context that can NOT be deduced from the code. Read at session
+> start; write when closing tasks/phases. Dates always absolute (YYYY-MM-DD).
 
-## Decisiones de arquitectura
+## Architecture decisions
 
-- {{FECHA}} — {{decisión + por qué}} <!-- ej: "Neon vía Vercel en vez de Supabase porque…" -->
+- {{DATE}} — {{decision + why}} <!-- e.g. "Neon via Vercel instead of Supabase because…" -->
 
-## Gotchas descubiertos
+## Discovered gotchas
 
-- {{FECHA}} — {{gotcha + cómo evitarlo}} <!-- ej: "`vercel integration add` sobrescribe .env.local: respaldar antes" -->
+- {{DATE}} — {{gotcha + how to avoid it}} <!-- e.g. "`vercel integration add` overwrites .env.local: back it up first" -->
 
-## Estado de integraciones
+## Integration status
 
-| Servicio | Vía | Estado | Notas |
+| Service | Via | Status | Notes |
 |---|---|---|---|
 | {{Neon}} | Vercel Marketplace | ⬜ | |
 
-## Pendientes / deuda técnica consciente
+## Pending / deliberate technical debt
 
-- {{qué se dejó fuera del MVP a propósito y cuándo revisarlo}}
+- {{what was left out of the MVP on purpose and when to revisit it}}

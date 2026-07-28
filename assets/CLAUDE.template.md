@@ -1,49 +1,49 @@
-# {{NOMBRE_PROYECTO}}
+# {{PROJECT_NAME}}
 
-{{DESCRIPCION_UNA_LINEA}}
+{{ONE_LINE_DESCRIPTION}}
 
-## Contexto
+## Context
 
-- **Producto:** {{QUE_HACE_Y_PARA_QUIEN}}
+- **Product:** {{WHAT_IT_DOES_AND_FOR_WHOM}}
 - **Stack:** {{STACK}}
-- **Fase actual:** ver `PROGRESS.md` (fuente de verdad del estado)
-- **Arquitectura:** ver `ARCHITECTURE.md`
-- **Memoria del proyecto:** `memory/MEMORY.md` — léela al iniciar sesión; regístrale decisiones y gotchas nuevos
+- **Current phase:** see `PROGRESS.md` (single source of truth for project state)
+- **Architecture:** see `ARCHITECTURE.md`
+- **Project memory:** `memory/MEMORY.md` — read it at session start; record new decisions and gotchas in it
 
-## Entornos
+## Environments
 
-| Entorno | Rama | URL |
+| Environment | Branch | URL |
 |---|---|---|
-| Producción | `main` | {{URL_PROD}} |
-| Staging | `staging` | {{URL_STAGING}} |
+| Production | `main` | {{PROD_URL}} |
+| Staging | `staging` | {{STAGING_URL}} |
 
-Todo el trabajo de la fase actual se prueba en **staging**. A producción solo llega lo verificado.
+All work of the current phase is verified on **staging**. Only verified work reaches production.
 
-## Reglas innegociables
+## Non-negotiable rules
 
-1. **Una tarea NO está terminada hasta que sus tests unitarios corren y pasan.** Ejecuta los tests y muestra el output antes de decir "listo". Si la tarea no tiene tests, escribirlos es parte de la tarea.
-2. **Nunca trabajes directo sobre `main` ni `staging`.** Ramas `feat/fN-descripcion` desde `staging`.
-3. **No merge a `main` sin:** (a) verificación E2E en staging, y (b) aprobación explícita del usuario. En ese orden.
-4. **Cada fase completada** → merge a `main` → tag `vX.Y.Z` → verificar deploy de producción en Ready → actualizar `PROGRESS.md` y `memory/MEMORY.md`.
-5. **Integraciones siempre vía Vercel** (Marketplace / MCP / CLI). No conectar servicios por fuera si existe la integración.
-6. **Commits convencionales:** `feat:`, `fix:`, `test:`, `chore:`, `docs:`.
-7. **UI con shadcn/ui + Tailwind:** componentes vía `npx shadcn@latest add <componente>`; no reinventar botones/modales/formularios a mano.
-8. En pruebas E2E multi-usuario: **confirmar la identidad de la sesión ANTES de cualquier operación destructiva** contra la base de datos.
-9. **Una sesión = una tarjeta de `PROGRESS.md`** (o pocas tarjetas pequeñas de la misma área). Respeta el "Fuera de alcance" de la tarjeta. Si la tarea crece a mitad: parar, partirla en `PROGRESS.md`, commitear lo que ya cumple DoD y seguir con la sub-tarea (idealmente en sesión fresca). El estado del proyecto vive en los archivos, no en la conversación.
-10. **Solo la fase actual se detalla en tarjetas.** Al abrir una fase nueva: proponer su descomposición (tarjetas atómicas + criterios E2E) y esperar el OK del usuario antes de la primera tarea.
+1. **A task is NOT done until its unit tests run and pass.** Execute the tests and show the output before saying "done". If the task has no tests, writing them is part of the task.
+2. **Never work directly on `main` or `staging`.** Branches `feat/fN-description` from `staging`.
+3. **No merge to `main` without:** (a) E2E verification on staging, and (b) explicit user approval. In that order.
+4. **Every completed phase** → merge to `main` → tag `vX.Y.Z` → verify the production deploy is Ready → update `PROGRESS.md` and `memory/MEMORY.md`.
+5. **Integrations always via Vercel** (Marketplace / MCP / CLI). Don't connect services outside it if the integration exists.
+6. **Conventional commits:** `feat:`, `fix:`, `test:`, `chore:`, `docs:`.
+7. **UI with shadcn/ui + Tailwind:** components via `npx shadcn@latest add <component>`; don't reinvent buttons/modals/forms by hand.
+8. In multi-user E2E testing: **confirm the session's identity BEFORE any destructive operation** against the database.
+9. **One session = one card from `PROGRESS.md`** (or a few small cards from the same area). Respect the card's "Out of scope". If the task grows mid-flight: stop, split it in `PROGRESS.md`, commit what already meets DoD and continue with the sub-task (ideally in a fresh session). Project state lives in the files, not in the conversation.
+10. **Only the current phase gets detailed into cards.** When opening a new phase: propose its breakdown (atomic cards + E2E criteria) and wait for the user's OK before the first task.
 
-## Definition of Done (por tarea)
+## Definition of Done (per task)
 
-- [ ] Código implementado
-- [ ] Tests unitarios de la tarea escritos
-- [ ] Tests ejecutados ahora y en verde (output mostrado)
-- [ ] `npm run build` pasa
-- [ ] `PROGRESS.md` actualizado
+- [ ] Code implemented
+- [ ] Unit tests for the task written
+- [ ] Tests executed now and green (output shown)
+- [ ] `npm run build` passes
+- [ ] `PROGRESS.md` updated
 
-## Comandos
+## Commands
 
 ```bash
-{{COMANDO_DEV}}        # desarrollo local
-{{COMANDO_TEST}}       # tests unitarios
-{{COMANDO_BUILD}}      # build de producción
+{{DEV_COMMAND}}        # local development
+{{TEST_COMMAND}}       # unit tests
+{{BUILD_COMMAND}}      # production build
 ```
