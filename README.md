@@ -68,6 +68,14 @@ evals/
 ## Installation
 
 ```bash
+npx skills add sambaone/product-architect
+```
+
+Works with Claude Code and 20+ other agents via the [skills CLI](https://github.com/vercel-labs/skills). Add `-g` to install globally (user-level) instead of into the current project.
+
+Or clone it directly into your skills folder:
+
+```bash
 git clone https://github.com/sambaone/product-architect.git ~/.claude/skills/product-architect
 ```
 
